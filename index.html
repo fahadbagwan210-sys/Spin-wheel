@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<!-- SEO TITLE -->
+<title>Free Spin Wheel Generator - Random Name Picker | Fahad Bagwan</title>
+
+<!-- SEO DESCRIPTION -->
+<meta name="description"
+      content="Free online Spin Wheel Generator. Add names, numbers or words and spin the wheel to randomly select a winner. Fast, simple and mobile-friendly.">
+
+<!-- SEO KEYWORDS -->
+<meta name="keywords"
+      content="spin wheel, spin wheel generator, random name picker, random wheel, name picker wheel, lucky wheel, random picker, online spin wheel">
+
+<meta name="author"
+      content="Fahad Bagwan">
+
+<meta name="robots"
+      content="index, follow">
+
+<link rel="canonical"
+      href="https://YOUR-USERNAME.github.io/spin-wheel/">
+
+
+<!-- OPEN GRAPH -->
+<meta property="og:title"
+      content="Free Spin Wheel Generator - Random Name Picker">
+
+<meta property="og:description"
+      content="Add names, numbers or words and spin the wheel to randomly select a winner.">
+
+<meta property="og:type"
+      content="website">
+
+<meta property="og:url"
+      content="https://YOUR-USERNAME.github.io/spin-wheel/">
+
+<meta property="og:site_name"
+      content="Fahad Bagwan Spin Wheel">
+
+
+<!-- TWITTER / SOCIAL PREVIEW -->
+<meta name="twitter:card"
+      content="summary">
+
+<meta name="twitter:title"
+      content="Free Spin Wheel Generator">
+
+<meta name="twitter:description"
+      content="Randomly pick a name, number or word with this free online Spin Wheel.">
+
+
+<!-- STRUCTURED DATA -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Spin Wheel Generator",
+  "alternateName": "Random Name Picker Wheel",
+  "description": "A free online spin wheel generator for randomly selecting names, numbers and words.",
+  "applicationCategory": "GameApplication",
+  "operatingSystem": "Any",
+  "author": {
+    "@type": "Person",
+    "name": "Fahad Bagwan"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+    text-align: center;
+    color: #111827;
+}
+
+.container {
+    max-width: 520px;
+    margin: auto;
+    padding: 20px;
+}
+
+.brand {
+    font-size: 15px;
+    font-weight: bold;
+    color: #2563eb;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+h1 {
+    margin: 5px 0;
+    font-size: 32px;
+}
+
+.subtitle {
+    color: #64748b;
+    margin-bottom: 22px;
+    line-height: 1.5;
+}
+
+.input-area {
+    display: flex;
+    gap: 8px;
+    margin: 20px 0;
+}
+
+input {
+    flex: 1;
+    padding: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #2563eb;
+}
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#addBtn {
+    background: #2563eb;
+    color: white;
+}
+
+.wheel-container {
+    position: relative;
+    width: 330px;
+    height: 330px;
+    margin: 30px auto;
+}
+
+canvas {
+    width: 330px;
+    height: 330px;
+    border-radius: 50%;
+    transition:
+        transform 4s cubic-bezier(0.15, 0.8, 0.2, 1);
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.18);
+}
+
+.pointer {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 0;
+    height: 0;
+
+    border-left: 19px solid transparent;
+    border-right: 19px solid transparent;
+    border-top: 38px solid #111827;
+
+    z-index: 5;
+}
+
+#spinBtn {
+    background: #16a34a;
+    color: white;
+    font-size: 21px;
+    padding: 15px 55px;
+}
+
+#spinBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#result {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 22px;
+    min-height: 32px;
+    color: #16a34a;
+}
+
+#items {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.item {
+    background: white;
+    padding: 12px;
+    margin: 7px 0;
+    border-radius: 9px;
+
+    display: flex;
+    justify-content: space-between;
+
+    box-shadow:
+        0 2px 7px rgba(0,0,0,0.06);
+}
+
+.delete {
+    color: #dc2626;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#clearBtn {
+    background: #dc2626;
+    color: white;
+    margin-top: 15px;
+}
+
+.info {
+    margin-top: 35px;
+    padding: 18px;
+    background: white;
+    border-radius: 12px;
+    text-align: left;
+    line-height: 1.6;
+}
+
+.info h2 {
+    margin-top: 0;
+    font-size: 21px;
+}
+
+.footer {
+    margin-top: 25px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- BRAND -->
+
+    <div class="brand">
+        MADE BY FAHAD BAGWAN
+    </div>
+
+
+    <!-- MAIN SEO HEADING -->
+
+    <h1>
+        🎡 Free Spin Wheel Generator
+    </h1>
+
+
+    <p class="subtitle">
+        Randomly pick a name, number or word with our
+        free online spin wheel.
+    </p>
+
+
+    <!-- INPUT -->
+
+    <div class="input-area">
+
+        <input
+            id="itemInput"
+            type="text"
+            placeholder="Enter name, number or word"
+            aria-label="Enter name, number or word"
+        >
+
+        <button
+            id="addBtn">
+            Add
+        </button>
+
+    </div>
+
+
+    <!-- WHEEL -->
+
+    <div class="wheel-container">
+
+        <div
+            class="pointer"
+            aria-label="Wheel pointer">
+        </div>
+
+        <canvas
+            id="wheel"
+            width="330"
+            height="330">
+        </canvas>
+
+    </div>
+
+
+    <!-- SPIN -->
+
+    <button
+        id="spinBtn">
+        SPIN 🎯
+    </button>
+
+
+    <!-- RESULT -->
+
+    <div
+        id="result"
+        aria-live="polite">
+    </div>
+
+
+    <!-- ITEMS -->
+
+    <div id="items"></div>
+
+
+    <!-- CLEAR -->
+
+    <button
+        id="clearBtn">
+        Clear All
+    </button>
+
+
+    <!-- SEO CONTENT -->
+
+    <section class="info">
+
+        <h2>
+            How to Use the Spin Wheel
+        </h2>
+
+        <p>
+            Enter names, numbers or words in the box above
+            and click Add. When you have added your choices,
+            click the Spin button to randomly select one.
+        </p>
+
+        <h2>
+            Random Name Picker
+        </h2>
+
+        <p>
+            This free random name picker can be used for
+            games, classroom activities, lucky draws,
+            team selection, decision making and other
+            situations where you need a random choice.
+        </p>
+
+    </section>
+
+
+    <div class="footer">
+        © 2026 Fahad Bagwan
+    </div>
+
+
+</div>
+
+
+<script>
+
+const canvas =
+    document.getElementById("wheel");
+
+const ctx =
+    canvas.getContext("2d");
+
+const input =
+    document.getElementById("itemInput");
+
+const addBtn =
+    document.getElementById("addBtn");
+
+const spinBtn =
+    document.getElementById("spinBtn");
+
+const clearBtn =
+    document.getElementById("clearBtn");
+
+const itemsDiv =
+    document.getElementById("items");
+
+const result =
+    document.getElementById("result");
+
+
+let items = [
+    "Fahad",
+    "Mujeeb",
+    "Ali",
+    "Rahul"
+];
+
+let rotation = 0;
+
+let spinning = false;
+
+
+const colors = [
+    "#ff6384",
+    "#36a2eb",
+    "#ffce56",
+    "#4bc0c0",
+    "#9966ff",
+    "#ff9f40",
+    "#22c55e",
+    "#f43f5e"
+];
+
+
+function drawWheel() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    if (items.length === 0) {
+
+        ctx.beginPath();
+
+        ctx.arc(
+            165,
+            165,
+            160,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fillStyle = "#ddd";
+
+        ctx.fill();
+
+        ctx.fillStyle = "#555";
+
+        ctx.font = "20px Arial";
+
+        ctx.textAlign = "center";
+
+        ctx.fillText(
+            "Add items",
+            165,
+            172
+        );
+
+        return;
+    }
+
+
+    const center = 165;
+
+    const radius = 160;
+
+    const slice =
+        (Math.PI * 2) / items.length;
+
+
+    items.forEach((item, i) => {
+
+        const start =
+            i * slice;
+
+        const end =
+            start + slice;
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            center,
+            center
+        );
+
+        ctx.arc(
+            center,
+            center,
+            radius,
+            start,
+            end
+        );
+
+        ctx.closePath();
+
+
+        ctx.fillStyle =
+            colors[i % colors.length];
+
+        ctx.fill();
+
+
+        ctx.strokeStyle =
+            "white";
+
+        ctx.lineWidth = 2;
+
+        ctx.stroke();
+
+
+        ctx.save();
+
+        ctx.translate(
+            center,
+            center
+        );
+
+        ctx.rotate(
+            start + slice / 2
+        );
+
+
+        ctx.fillStyle =
+            "white";
+
+        ctx.font =
+            "bold 15px Arial";
+
+        ctx.textAlign =
+            "right";
+
+
+        let text =
+            String(item);
+
+
+        if (text.length > 15) {
+
+            text =
+                text.substring(0, 15)
+                + "...";
+        }
+
+
+        ctx.fillText(
+            text,
+            radius - 15,
+            5
+        );
+
+
+        ctx.restore();
+
+    });
+
+}
+
+
+function showItems() {
+
+    itemsDiv.innerHTML = "";
+
+
+    items.forEach(
+        (item, index) => {
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "item";
+
+
+            div.innerHTML = `
+                <span>
+                    ${index + 1}. ${item}
+                </span>
+
+                <span
+                    class="delete"
+                    onclick="removeItem(${index})">
+                    ✕
+                </span>
+            `;
+
+
+            itemsDiv.appendChild(div);
+
+        }
+    );
+
+}
+
+
+function addItem() {
+
+    const value =
+        input.value.trim();
+
+
+    if (value === "") {
+
+        alert(
+            "Please enter something."
+        );
+
+        return;
+    }
+
+
+    if (spinning) return;
+
+
+    items.push(value);
+
+    input.value = "";
+
+
+    drawWheel();
+
+    showItems();
+
+}
+
+
+function removeItem(index) {
+
+    if (spinning) return;
+
+
+    items.splice(
+        index,
+        1
+    );
+
+
+    drawWheel();
+
+    showItems();
+
+    result.textContent = "";
+
+}
+
+
+addBtn.addEventListener(
+    "click",
+    addItem
+);
+
+
+input.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+
+            addItem();
+
+        }
+
+    }
+);
+
+
+clearBtn.addEventListener(
+    "click",
+    function() {
+
+        if (spinning) return;
+
+
+        items = [];
+
+        result.textContent = "";
+
+
+        drawWheel();
+
+        showItems();
+
+    }
+);
+
+
+spinBtn.addEventListener(
+    "click",
+    function() {
+
+        if (spinning) return;
+
+
+        if (items.length < 2) {
+
+            alert(
+                "Add at least 2 items."
+            );
+
+            return;
+        }
+
+
+        spinning = true;
+
+        spinBtn.disabled = true;
+
+
+        result.textContent =
+            "Spinning... 🎡";
+
+
+        const slice =
+            360 / items.length;
+
+
+        const selectedIndex =
+            Math.floor(
+                Math.random() *
+                items.length
+            );
+
+
+        const selectedCenter =
+            selectedIndex * slice
+            + slice / 2;
+
+
+        const currentRotation =
+            ((rotation % 360) + 360)
+            % 360;
+
+
+        let neededRotation =
+            270
+            - selectedCenter
+            - currentRotation;
+
+
+        neededRotation =
+            ((neededRotation % 360) + 360)
+            % 360;
+
+
+        rotation =
+            rotation
+            + (360 * 6)
+            + neededRotation;
+
+
+        canvas.style.transform =
+            `rotate(${rotation}deg)`;
+
+
+        setTimeout(
+            function() {
+
+                result.textContent =
+                    "🏆 Selected: "
+                    + items[selectedIndex];
+
+
+                spinning = false;
+
+                spinBtn.disabled = false;
+
+            },
+            4100
+        );
+
+    }
+);
+
+
+drawWheel();
+
+showItems();
+
+</script>
+
+</body>
+</html>
