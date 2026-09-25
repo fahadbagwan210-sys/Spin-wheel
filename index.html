@@ -1,804 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta name="google-site-verification" content="284sN8Aftxf4qlwqWn_SwBWd0EiW52UfF4ZtIHGRTN4" />
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<!-- SEO TITLE -->
-<title>Free Spin Wheel Generator - Random Name Picker | Fahad Bagwan</title>
-
-<!-- SEO DESCRIPTION -->
-<meta name="description"
-      content="Free online Spin Wheel Generator. Add names, numbers or words and spin the wheel to randomly select a winner. Fast, simple and mobile-friendly.">
-
-<!-- SEO KEYWORDS -->
-<meta name="keywords"
-      content="spin wheel, spin wheel generator, random name picker, random wheel, name picker wheel, lucky wheel, random picker, online spin wheel">
-
-<meta name="author"
-      content="Fahad Bagwan">
-
-<meta name="robots"
-      content="index, follow">
-
-<link rel="canonical"
-      href="https://fahadbagwan210-xys.github.io/Spin-wheel/
-
-
-<!-- OPEN GRAPH -->
-<meta property="og:title"
-      content="Free Spin Wheel Generator - Random Name Picker">
-
-<meta property="og:description"
-      content="Add names, numbers or words and spin the wheel to randomly select a winner.">
-
-<meta property="og:type"
-      content="website">
-
-<meta property="og:url"
-      content="https://fahadbagwan210-xys.github.io/Spin-wheel/
-
-<meta property="og:site_name"
-      content="Fahad Bagwan Spin Wheel">
-
-
-<!-- TWITTER / SOCIAL PREVIEW -->
-<meta name="twitter:card"
-      content="summary">
-
-<meta name="twitter:title"
-      content="Free Spin Wheel Generator">
-
-<meta name="twitter:description"
-      content="Randomly pick a name, number or word with this free online Spin Wheel.">
-
-
-<!-- STRUCTURED DATA -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Spin Wheel Generator",
-  "alternateName": "Random Name Picker Wheel",
-  "description": "A free online spin wheel generator for randomly selecting names, numbers and words.",
-  "applicationCategory": "GameApplication",
-  "operatingSystem": "Any",
-  "author": {
-    "@type": "Person",
-    "name": "Fahad Bagwan"
-  },
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  }
-}
-</script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Spin Wheel Generator - Random Name & Number Picker | Fahad</title>
+<meta name="description" content="Free online Spin Wheel Generator. Add names, numbers or words and spin the wheel to randomly select a winner. Fast, simple and mobile-friendly.">
+<meta name="keywords" content="spin wheel, random name picker, wheel of names, random picker, spin the wheel">
+<link rel="canonical" href="https://fahadbagwan210-sys.github.io/Spin-wheel/">
+<meta property="og:title" content="Free Spin Wheel Generator - Random Name Picker">
+<meta property="og:url" content="https://fahadbagwan210-sys.github.io/Spin-wheel/">
 
 <style>
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #eef2ff, #f8fafc);
-    text-align: center;
-    color: #111827;
-}
-
-.container {
-    max-width: 520px;
-    margin: auto;
-    padding: 20px;
-}
-
-.brand {
-    font-size: 15px;
-    font-weight: bold;
-    color: #2563eb;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-}
-
-h1 {
-    margin: 5px 0;
-    font-size: 32px;
-}
-
-.subtitle {
-    color: #64748b;
-    margin-bottom: 22px;
-    line-height: 1.5;
-}
-
-.input-area {
-    display: flex;
-    gap: 8px;
-    margin: 20px 0;
-}
-
-input {
-    flex: 1;
-    padding: 14px;
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
-    font-size: 16px;
-    outline: none;
-}
-
-input:focus {
-    border-color: #2563eb;
-}
-
-button {
-    border: none;
-    border-radius: 10px;
-    padding: 12px 18px;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-#addBtn {
-    background: #2563eb;
-    color: white;
-}
-
-.wheel-container {
-    position: relative;
-    width: 330px;
-    height: 330px;
-    margin: 30px auto;
-}
-
-canvas {
-    width: 330px;
-    height: 330px;
-    border-radius: 50%;
-    transition:
-        transform 4s cubic-bezier(0.15, 0.8, 0.2, 1);
-
-    box-shadow:
-        0 8px 25px rgba(0,0,0,0.18);
-}
-
-.pointer {
-    position: absolute;
-    top: -13px;
-    left: 50%;
-    transform: translateX(-50%);
-
-    width: 0;
-    height: 0;
-
-    border-left: 19px solid transparent;
-    border-right: 19px solid transparent;
-    border-top: 38px solid #111827;
-
-    z-index: 5;
-}
-
-#spinBtn {
-    background: #16a34a;
-    color: white;
-    font-size: 21px;
-    padding: 15px 55px;
-}
-
-#spinBtn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-#result {
-    font-size: 22px;
-    font-weight: bold;
-    margin-top: 22px;
-    min-height: 32px;
-    color: #16a34a;
-}
-
-#items {
-    margin-top: 20px;
-    text-align: left;
-}
-
-.item {
-    background: white;
-    padding: 12px;
-    margin: 7px 0;
-    border-radius: 9px;
-
-    display: flex;
-    justify-content: space-between;
-
-    box-shadow:
-        0 2px 7px rgba(0,0,0,0.06);
-}
-
-.delete {
-    color: #dc2626;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-#clearBtn {
-    background: #dc2626;
-    color: white;
-    margin-top: 15px;
-}
-
-.info {
-    margin-top: 35px;
-    padding: 18px;
-    background: white;
-    border-radius: 12px;
-    text-align: left;
-    line-height: 1.6;
-}
-
-.info h2 {
-    margin-top: 0;
-    font-size: 21px;
-}
-
-.footer {
-    margin-top: 25px;
-    color: #64748b;
-    font-size: 13px;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
+body{background:#0f0f0f;color:#fff;text-align:center;padding:20px}
+h1{font-size:28px;margin:15px 0;color:#FFD93D}
+.subtitle{color:#aaa;margin-bottom:20px}
+.container{display:flex;flex-wrap:wrap;justify-content:center;gap:30px;max-width:1100px;margin:0 auto}
+canvas{border-radius:50%;box-shadow:0 0 30px rgba(255,217,61,0.3);max-width:90vw}
+#spinBtn{margin-top:20px;padding:14px 45px;font-size:20px;font-weight:bold;background:#FFD93D;border:none;border-radius:50px;cursor:pointer;color:#000}
+.controls{background:#1a1a1a;padding:20px;border-radius:15px;min-width:300px;text-align:left}
+.modes{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap}
+.modes button{padding:6px 12px;border-radius:20px;border:1px solid #333;background:#222;color:#fff;cursor:pointer}
+.modes button.active{background:#FFD93D;color:#000}
+textarea{width:100%;height:150px;background:#111;color:#fff;border:1px solid #333;border-radius:10px;padding:12px}
+.info-section{max-width:800px;margin:50px auto;text-align:left;background:#1a1a1a;padding:25px;border-radius:15px}
+.info-section h2{color:#FFD93D;margin:20px 0 10px}
+.info-section p,.info-section li{color:#ccc;line-height:1.6;margin-bottom:8px}
+#winner{font-size:24px;margin-top:15px;font-weight:bold;color:#FFD93D;min-height:30px}
 </style>
-
 </head>
-
-
 <body>
+<h1>🎡 Free Spin Wheel Generator</h1>
+<p class="subtitle">Random Name Picker - Fair, Fast & Free</p>
 
 <div class="container">
-
-
-    <!-- BRAND -->
-
-    <div class="brand">
-        MADE BY FAHAD BAGWAN
-    </div>
-
-
-    <!-- MAIN SEO HEADING -->
-
-    <h1>
-        🎡 Free Spin Wheel Generator
-    </h1>
-
-
-    <p class="subtitle">
-        Randomly pick a name, number or word with our
-        free online spin wheel.
-    </p>
-
-
-    <!-- INPUT -->
-
-    <div class="input-area">
-
-        <input
-            id="itemInput"
-            type="text"
-            placeholder="Enter name, number or word"
-            aria-label="Enter name, number or word"
-        >
-
-        <button
-            id="addBtn">
-            Add
-        </button>
-
-    </div>
-
-
-    <!-- WHEEL -->
-
-    <div class="wheel-container">
-
-        <div
-            class="pointer"
-            aria-label="Wheel pointer">
-        </div>
-
-        <canvas
-            id="wheel"
-            width="330"
-            height="330">
-        </canvas>
-
-    </div>
-
-
-    <!-- SPIN -->
-
-    <button
-        id="spinBtn">
-        SPIN 🎯
-    </button>
-
-
-    <!-- RESULT -->
-
-    <div
-        id="result"
-        aria-live="polite">
-    </div>
-
-
-    <!-- ITEMS -->
-
-    <div id="items"></div>
-
-
-    <!-- CLEAR -->
-
-    <button
-        id="clearBtn">
-        Clear All
-    </button>
-
-
-    <!-- SEO CONTENT -->
-
-    <section class="info">
-
-        <h2>
-            How to Use the Spin Wheel
-        </h2>
-
-        <p>
-            Enter names, numbers or words in the box above
-            and click Add. When you have added your choices,
-            click the Spin button to randomly select one.
-        </p>
-
-        <h2>
-            Random Name Picker
-        </h2>
-
-        <p>
-            This free random name picker can be used for
-            games, classroom activities, lucky draws,
-            team selection, decision making and other
-            situations where you need a random choice.
-        </p>
-
-    </section>
-
-
-    <div class="footer">
-        © 2026 Fahad Bagwan
-    </div>
-
-
+<div class="wheel-box">
+<canvas id="wheel" width="400" height="400"></canvas>
+<div id="winner"></div>
+<button id="spinBtn">SPIN!</button>
+</div>
+<div class="controls">
+<h3>⚙️ Modes</h3>
+<div class="modes">
+<button class="active" onclick="setMode('names')">Names</button>
+<button onclick="setMode('numbers')">Numbers 1-100</button>
+<button onclick="setMode('yesno')">Yes / No</button>
+</div>
+<h3>📝 Entries</h3>
+<textarea id="entries">Fahad
+Rahul
+Aman
+Priya
+Sneha
+Vikram</textarea>
+<button onclick="shareWheel()" style="margin-top:12px;width:100%;padding:10px;background:#222;border:1px solid #333;color:#fff;border-radius:10px;cursor:pointer">🔗 Share This Wheel</button>
+</div>
 </div>
 
+<div class="info-section">
+<h2>How to Use?</h2>
+<p><b>1. Add:</b> Write names - one per line.<br><b>2. Spin:</b> Click SPIN.<br><b>3. Winner:</b> Random winner!</p>
+<h2>Perfect For</h2>
+<ul>
+<li>🏫 Classroom: Pick random student</li>
+<li>🎁 Giveaways: Choose winner fairly</li>
+<li>🎮 Games: Truth or dare</li>
+<li>👥 Team Selection</li>
+</ul>
+<h2>FAQ - Is this wheel rigged?</h2>
+<p>No, 100% random and fair. Every entry has equal chance. 100% free forever.</p>
+</div>
 
 <script>
-
-const canvas =
-    document.getElementById("wheel");
-
-const ctx =
-    canvas.getContext("2d");
-
-const input =
-    document.getElementById("itemInput");
-
-const addBtn =
-    document.getElementById("addBtn");
-
-const spinBtn =
-    document.getElementById("spinBtn");
-
-const clearBtn =
-    document.getElementById("clearBtn");
-
-const itemsDiv =
-    document.getElementById("items");
-
-const result =
-    document.getElementById("result");
-
-
-let items = [
-    "Fahad",
-    "Mujeeb",
-    "Ali",
-    "Rahul"
-];
-
-let rotation = 0;
-
-let spinning = false;
-
-
-const colors = [
-    "#ff6384",
-    "#36a2eb",
-    "#ffce56",
-    "#4bc0c0",
-    "#9966ff",
-    "#ff9f40",
-    "#22c55e",
-    "#f43f5e"
-];
-
-
-function drawWheel() {
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    if (items.length === 0) {
-
-        ctx.beginPath();
-
-        ctx.arc(
-            165,
-            165,
-            160,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle = "#ddd";
-
-        ctx.fill();
-
-        ctx.fillStyle = "#555";
-
-        ctx.font = "20px Arial";
-
-        ctx.textAlign = "center";
-
-        ctx.fillText(
-            "Add items",
-            165,
-            172
-        );
-
-        return;
-    }
-
-
-    const center = 165;
-
-    const radius = 160;
-
-    const slice =
-        (Math.PI * 2) / items.length;
-
-
-    items.forEach((item, i) => {
-
-        const start =
-            i * slice;
-
-        const end =
-            start + slice;
-
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            center,
-            center
-        );
-
-        ctx.arc(
-            center,
-            center,
-            radius,
-            start,
-            end
-        );
-
-        ctx.closePath();
-
-
-        ctx.fillStyle =
-            colors[i % colors.length];
-
-        ctx.fill();
-
-
-        ctx.strokeStyle =
-            "white";
-
-        ctx.lineWidth = 2;
-
-        ctx.stroke();
-
-
-        ctx.save();
-
-        ctx.translate(
-            center,
-            center
-        );
-
-        ctx.rotate(
-            start + slice / 2
-        );
-
-
-        ctx.fillStyle =
-            "white";
-
-        ctx.font =
-            "bold 15px Arial";
-
-        ctx.textAlign =
-            "right";
-
-
-        let text =
-            String(item);
-
-
-        if (text.length > 15) {
-
-            text =
-                text.substring(0, 15)
-                + "...";
-        }
-
-
-        ctx.fillText(
-            text,
-            radius - 15,
-            5
-        );
-
-
-        ctx.restore();
-
-    });
-
+const canvas=document.getElementById('wheel');
+const ctx=canvas.getContext('2d');
+const entriesEl=document.getElementById('entries');
+const winnerEl=document.getElementById('winner');
+let angle=0; let spinning=false;
+const colors=['#FFD93D','#FF6B6B','#6BCB77','#4D96FF','#FF8A5C','#845EC2','#00C9A7'];
+function getEntries(){return entriesEl.value.split('\n').filter(e=>e.trim()!=='');}
+function drawWheel(){
+  const entries=getEntries(); if(entries.length===0) return;
+  const arc=(2*Math.PI)/entries.length;
+  ctx.clearRect(0,0,400,400);
+  entries.forEach((entry,i)=>{
+    ctx.beginPath(); ctx.fillStyle=colors[i%colors.length];
+    ctx.moveTo(200,200); ctx.arc(200,200,190, angle+i*arc, angle+(i+1)*arc);
+    ctx.closePath(); ctx.fill();
+    ctx.save(); ctx.translate(200,200); ctx.rotate(angle+i*arc+arc/2);
+    ctx.textAlign="right"; ctx.fillStyle="#000"; ctx.font="bold 14px sans-serif";
+    ctx.fillText(entry.substring(0,18),170,5); ctx.restore();
+  });
+  ctx.fillStyle="#fff"; ctx.beginPath(); ctx.moveTo(390,200); ctx.lineTo(370,190); ctx.lineTo(370,210); ctx.fill();
 }
-
-
-function showItems() {
-
-    itemsDiv.innerHTML = "";
-
-
-    items.forEach(
-        (item, index) => {
-
-            const div =
-                document.createElement("div");
-
-            div.className =
-                "item";
-
-
-            div.innerHTML = `
-                <span>
-                    ${index + 1}. ${item}
-                </span>
-
-                <span
-                    class="delete"
-                    onclick="removeItem(${index})">
-                    ✕
-                </span>
-            `;
-
-
-            itemsDiv.appendChild(div);
-
-        }
-    );
-
+function spin(){
+  if(spinning) return;
+  if(getEntries().length<2){alert('Add at least 2 entries!');return;}
+  spinning=true; winnerEl.textContent=''; let velocity=Math.random()*10+15;
+  function animate(){
+    velocity*=0.985; angle+=velocity*0.05; drawWheel();
+    if(velocity>0.01){requestAnimationFrame(animate);}else{
+      spinning=false; const entries=getEntries(); const arc=(2*Math.PI)/entries.length;
+      const normalized=(2*Math.PI-(angle%(2*Math.PI)))%(2*Math.PI);
+      const winnerIndex=Math.floor(normalized/arc);
+      winnerEl.textContent='🎉 Winner: '+entries[winnerIndex]+' 🎉';
+    }
+  }animate();
 }
-
-
-function addItem() {
-
-    const value =
-        input.value.trim();
-
-
-    if (value === "") {
-
-        alert(
-            "Please enter something."
-        );
-
-        return;
-    }
-
-
-    if (spinning) return;
-
-
-    items.push(value);
-
-    input.value = "";
-
-
-    drawWheel();
-
-    showItems();
-
+function setMode(mode){
+  document.querySelectorAll('.modes button').forEach(b=>b.classList.remove('active')); event.target.classList.add('active');
+  if(mode==='numbers'){let nums=''; for(let i=1;i<=20;i++) nums+=i+'\n'; entriesEl.value=nums.trim();}
+  else if(mode==='yesno'){entriesEl.value='Yes\nNo\nMaybe';}
+  else{entriesEl.value='Fahad\nRahul\nAman\nPriya\nSneha\nVikram';}
+  drawWheel();
 }
-
-
-function removeItem(index) {
-
-    if (spinning) return;
-
-
-    items.splice(
-        index,
-        1
-    );
-
-
-    drawWheel();
-
-    showItems();
-
-    result.textContent = "";
-
+function shareWheel(){
+  const encoded=btoa(entriesEl.value);
+  const url=window.location.origin+window.location.pathname+'?wheel='+encoded;
+  navigator.clipboard.writeText(url).then(()=>{alert('Link copied! Share on WhatsApp');});
 }
-
-
-addBtn.addEventListener(
-    "click",
-    addItem
-);
-
-
-input.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (event.key === "Enter") {
-
-            addItem();
-
-        }
-
-    }
-);
-
-
-clearBtn.addEventListener(
-    "click",
-    function() {
-
-        if (spinning) return;
-
-
-        items = [];
-
-        result.textContent = "";
-
-
-        drawWheel();
-
-        showItems();
-
-    }
-);
-
-
-spinBtn.addEventListener(
-    "click",
-    function() {
-
-        if (spinning) return;
-
-
-        if (items.length < 2) {
-
-            alert(
-                "Add at least 2 items."
-            );
-
-            return;
-        }
-
-
-        spinning = true;
-
-        spinBtn.disabled = true;
-
-
-        result.textContent =
-            "Spinning... 🎡";
-
-
-        const slice =
-            360 / items.length;
-
-
-        const selectedIndex =
-            Math.floor(
-                Math.random() *
-                items.length
-            );
-
-
-        const selectedCenter =
-            selectedIndex * slice
-            + slice / 2;
-
-
-        const currentRotation =
-            ((rotation % 360) + 360)
-            % 360;
-
-
-        let neededRotation =
-            270
-            - selectedCenter
-            - currentRotation;
-
-
-        neededRotation =
-            ((neededRotation % 360) + 360)
-            % 360;
-
-
-        rotation =
-            rotation
-            + (360 * 6)
-            + neededRotation;
-
-
-        canvas.style.transform =
-            `rotate(${rotation}deg)`;
-
-
-        setTimeout(
-            function() {
-
-                result.textContent =
-                    "🏆 Selected: "
-                    + items[selectedIndex];
-
-
-                spinning = false;
-
-                spinBtn.disabled = false;
-
-            },
-            4100
-        );
-
-    }
-);
-
-
+entriesEl.addEventListener('input',drawWheel);
+document.getElementById('spinBtn').addEventListener('click',spin);
 drawWheel();
-
-showItems();
-
 </script>
-
 </body>
 </html>
