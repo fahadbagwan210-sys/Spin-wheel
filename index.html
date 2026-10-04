@@ -5,69 +5,52 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bird Arrow Puzzle</title>
 <style>
-  body{margin:0; font-family:sans-serif; background:#fdf6e8; overflow:hidden;}
-  #intro{height:100vh; display:flex; justify-content:center; align-items:center; position:relative;}
+  body{margin:0; font-family:system-ui; background:#fdf6e8; overflow:hidden;}
+  #intro{height:100vh; display:flex; justify-content:center; align-items:center; position:relative; background:#fdf6e8;}
  .branch{position:absolute; bottom:38%; width:85%; height:6px; background:#5a3210; border-radius:5px; left:7%;}
-  #bird{position:absolute; width:75px; left:-100px; top:20%; animation:fly 2.5s forwards cubic-bezier(.4,0,.2,1);}
-  @keyframes fly{0%{left:-100px; top:15%; transform:rotate(-15deg);} 60%{left:55%; top:50%;} 100%{left:66%; top:60%; transform:rotate(0deg);} }
-  #startBtn{position:absolute; bottom:18%; padding:14px 40px; background:#111; color:#fff; border:none; border-radius:30px; font-size:19px; font-weight:bold; opacity:0; pointer-events:none; transition:.5s; cursor:pointer;}
+  #bird{position:absolute; font-size:60px; left:-100px; top:20%; animation:fly 2.5s forwards cubic-bezier(.4,0,.2,1); z-index:10;}
+  @keyframes fly{0%{left:-100px; top:10%; transform:rotate(-15deg);} 60%{left:55%; top:48%; transform:rotate(5deg) scale(1.2);} 100%{left:66%; top:58%; transform:rotate(0deg) scale(1);} }
+  #startBtn{position:absolute; bottom:20%; padding:14px 40px; background:#111; color:#fff; border:none; border-radius:30px; font-size:18px; font-weight:bold; opacity:0; pointer-events:none; transition:.5s; cursor:pointer;}
   #startBtn.show{opacity:1; pointer-events:auto;}
-  #game{display:none; height:100vh; background:#fff; text-align:center; padding:20px; overflow:auto;}
+  #game{display:none; min-height:100vh; background:#fff; text-align:center; padding:20px;}
   #grid{display:grid; grid-template-columns:repeat(3, 80px); gap:10px; justify-content:center; margin:20px auto;}
- .cell{width:80px; height:80px; background:#fff8e1; border:2px solid #e6c86b; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:36px; cursor:pointer; transition:0.2s; user-select:none;}
- .cell:active{transform:scale(0.9);}
+ .cell{width:80px; height:80px; background:#fff8e1; border:2px solid #e6c86b; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:36px; cursor:pointer;}
  .cell.solved{background:#c8f7c5; border-color:#4caf50;}
 </style>
 </head>
 <body>
 
 <div id="intro">
-  <h2 style="position:absolute; top:12%; left:10%; font-size:32px;">Arrow Puzzle<br>that lands<br>with precision</h2>
+  <h2 style="position:absolute; top:10%; left:10%; font-size:34px; line-height:1.2;">Arrow Puzzle<br>that lands<br>with precision</h2>
   <div class="branch"></div>
-  <img id="bird" src="https://cdn-icons-png.flaticon.com/512/3069/3069184.png">
+  <div id="bird">🐦</div>
   <button id="startBtn" onclick="openGame()">START ▶</button>
 </div>
 
 <div id="game">
   <h2>🧩 Arrow Puzzle</h2>
-  <p>Tap arrow to rotate. Make all arrows point to CENTER 🎯</p>
+  <p>Tap arrow to rotate. Make all point to CENTER 🎯</p>
   <div id="grid"></div>
   <h3 id="msg"></h3>
   <button onclick="newPuzzle()" style="padding:10px 20px; background:#FF6B00; color:#fff; border:none; border-radius:10px;">New Puzzle</button>
-  <button onclick="location.reload()" style="padding:10px 20px;">Back</button>
 </div>
 
 <script>
-setTimeout(()=>document.getElementById('startBtn').classList.add('show'),2600);
+setTimeout(()=>document.getElementById('startBtn').classList.add('show'),2700);
 function openGame(){ document.getElementById('intro').style.display='none'; document.getElementById('game').style.display='block'; document.body.style.overflow='auto'; newPuzzle(); }
 
-let arrows = ['↑','→','↓','←'];
-let board = [];
-let target = [[3,2,3],[2,8,0],[1,0,1]]; // 0=right,1=down,2=left,3=up, 8=center
-
+let arrows=['↑','→','↓','←'];
+let board=[];
 function newPuzzle(){
-  board=[];
-  let grid=document.getElementById('grid');
-  grid.innerHTML='';
-  document.getElementById('msg').innerText='';
-  for(let i=0;i<9;i++){
-    board[i]=Math.floor(Math.random()*4);
-    let d=document.createElement('div');
-    d.className='cell';
-    d.id='c'+i;
-    d.innerText=arrows[board[i]];
-    d.onclick=()=>rotate(i);
-    grid.appendChild(d);
-  }
+  board=[]; let grid=document.getElementById('grid'); grid.innerHTML=''; document.getElementById('msg').innerText='';
+  for(let i=0;i<9;i++){ board[i]=Math.floor(Math.random()*4); let d=document.createElement('div'); d.className='cell'; d.id='c'+i; d.innerText=i==4?'🎯':arrows[board[i]]; d.onclick=()=>rotate(i); grid.appendChild(d); }
 }
-
-function rotate(i){
-  if(i==4) return; // center fixed
-  board[i]=(board[i]+1)%4;
-  document.getElementById('c'+i).innerText=arrows[board[i]];
-  checkWin();
-}
-
+function rotate(i){ if(i==4) return; board[i]=(board[i]+1)%4; document.getElementById('c'+i).innerText=arrows[board[i]]; checkWin(); }
 function checkWin(){
-  // Center is 4, all should point to center
-  // 0:top-left should point → or ↓ or ↘ (we simplify
+  let solutions=[[1,2],[2],[2,3],[0],[],[3],[0,1],[0],[0,3]];
+  let win=true; for(let i=0;i<9;i++){ if(i==4) continue; if(!solutions[i].includes(board[i])) win=false; }
+  if(win){ document.getElementById('msg').innerText='🎉 Solved!'; document.querySelectorAll('.cell').forEach(c=>c.classList.add('solved')); }
+}
+</script>
+</body>
+</html>
