@@ -1,140 +1,73 @@
-
-  <!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Spin Wheel - Random Picker by Fahad Bagwan</title>
-<meta name="description" content="Free Spin Wheel by Fahad Bagwan - Add names and spin">
+<title>Bird Arrow Puzzle</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
-body{background:#eef2f7;color:#333;padding:15px;text-align:center}
-h1{font-size:22px;margin:10px 0 5px;color:#111}
-.credit{color:#666;font-size:13px;margin-bottom:15px}
-.credit b{color:#2e7d32}
-canvas{background:#fff;border-radius:50%;box-shadow:0 4px 20px rgba(0,0,0,0.1);max-width:85vw}
-#spinBtn{background:#2e9b4f;color:#fff;border:none;padding:14px 50px;border-radius:12px;font-size:20px;font-weight:bold;cursor:pointer;margin:15px 0;box-shadow:0 4px 0 #1d6b33}
-#spinBtn:active{transform:translateY(2px);box-shadow:0 2px 0 #1d6b33}
-.input-box{display:flex;gap:8px;max-width:400px;margin:15px auto;background:#fff;padding:10px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
-.input-box input{flex:1;border:1px solid #ddd;border-radius:8px;padding:12px;outline:none;font-size:15px}
-.input-box button{background:#111;color:#fff;border:none;padding:0 20px;border-radius:8px;font-weight:bold;cursor:pointer}
-.list{max-width:400px;margin:0 auto;text-align:left}
-.item{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:12px 15px;border-radius:12px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
-.item span{color:#d32f2f;font-size:18px;cursor:pointer;padding:0 5px}
-#clearBtn{background:#d32f2f;color:#fff;border:none;padding:10px 22px;border-radius:20px;font-weight:bold;margin:15px 0;cursor:pointer}
-.info{background:#fff;text-align:left;max-width:400px;margin:20px auto;padding:18px;border-radius:15px;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
-.info h3{margin-bottom:8px;font-size:16px}
-.info p{font-size:14px;color:#555;line-height:1.5}
-.footer{margin-top:20px;padding:15px;background:#e8f5e9;border-radius:12px;max-width:400px;margin-left:auto;margin-right:auto;border:1px dashed #4CAF50}
-#winner{font-size:22px;font-weight:bold;color:#2e7d32;min-height:28px;margin-top:10px}
+  body{margin:0; font-family:sans-serif; background:#fdf6e8; overflow:hidden;}
+  #intro{height:100vh; display:flex; justify-content:center; align-items:center; position:relative;}
+ .branch{position:absolute; bottom:38%; width:85%; height:6px; background:#5a3210; border-radius:5px; left:7%;}
+  #bird{position:absolute; width:75px; left:-100px; top:20%; animation:fly 2.5s forwards cubic-bezier(.4,0,.2,1);}
+  @keyframes fly{0%{left:-100px; top:15%; transform:rotate(-15deg);} 60%{left:55%; top:50%;} 100%{left:66%; top:60%; transform:rotate(0deg);} }
+  #startBtn{position:absolute; bottom:18%; padding:14px 40px; background:#111; color:#fff; border:none; border-radius:30px; font-size:19px; font-weight:bold; opacity:0; pointer-events:none; transition:.5s; cursor:pointer;}
+  #startBtn.show{opacity:1; pointer-events:auto;}
+  #game{display:none; height:100vh; background:#fff; text-align:center; padding:20px; overflow:auto;}
+  #grid{display:grid; grid-template-columns:repeat(3, 80px); gap:10px; justify-content:center; margin:20px auto;}
+ .cell{width:80px; height:80px; background:#fff8e1; border:2px solid #e6c86b; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:36px; cursor:pointer; transition:0.2s; user-select:none;}
+ .cell:active{transform:scale(0.9);}
+ .cell.solved{background:#c8f7c5; border-color:#4caf50;}
 </style>
 </head>
 <body>
 
-<h1>🎡 Spin Wheel</h1>
-<p class="credit">Made with ❤️ by <b>Fahad Bagwan</b></p>
-
-<canvas id="wheel" width="380" height="380"></canvas>
-<div id="winner"></div>
-<button id="spinBtn">SPIN 🎯</button>
-
-<div class="input-box">
-<input id="nameInput" type="text" placeholder="Enter a name...">
-<button onclick="addEntry()">Add</button>
+<div id="intro">
+  <h2 style="position:absolute; top:12%; left:10%; font-size:32px;">Arrow Puzzle<br>that lands<br>with precision</h2>
+  <div class="branch"></div>
+  <img id="bird" src="https://cdn-icons-png.flaticon.com/512/3069/3069184.png">
+  <button id="startBtn" onclick="openGame()">START ▶</button>
 </div>
 
-<div class="list" id="list"></div>
-<button id="clearBtn" onclick="clearAll()">Clear All</button>
-<br>
-<button onclick="shareWheel()" style="background:#25D366;color:#fff;border:none;padding:12px 22px;border-radius:20px;font-weight:bold;cursor:pointer;margin-bottom:20px;">📤 Share Wheel on WhatsApp</button>
-
-<div class="info">
-<h3>How to Use the Spin Wheel</h3>
-<p>Enter names, numbers or words in the box above and click Add. When you have added your choices, click the Spin button to randomly select one.</p>
-<br>
-<h3>Random Name Picker</h3>
-<p>This free random name picker by <b>Fahad Bagwan</b> can be used for games, classroom activities, lucky draws, team selection and decision making.</p>
-<div class="footer">
-<p style="font-size:12px;color:#666;margin:0">Created by</p>
-<p style="font-size:18px;font-weight:bold;color:#2e7d32;margin:2px 0">Fahad Bagwan</p>
-<p style="font-size:11px;color:#888;margin:0">fahadbagwan210-sys.github.io/Spin-wheel</p>
-</div>
+<div id="game">
+  <h2>🧩 Arrow Puzzle</h2>
+  <p>Tap arrow to rotate. Make all arrows point to CENTER 🎯</p>
+  <div id="grid"></div>
+  <h3 id="msg"></h3>
+  <button onclick="newPuzzle()" style="padding:10px 20px; background:#FF6B00; color:#fff; border:none; border-radius:10px;">New Puzzle</button>
+  <button onclick="location.reload()" style="padding:10px 20px;">Back</button>
 </div>
 
 <script>
-let entries = JSON.parse(localStorage.getItem('fahad_wheel') || '["Fahad","Mujeeb","Ali","Rahul"]');
-const canvas=document.getElementById('wheel');
-const ctx=canvas.getContext('2d');
-const winnerEl=document.getElementById('winner');
-let angle=0; let spinning=false;
-const colors=['#4D96FF','#FF6B6B','#FFD93D','#6BCB77','#845EC2','#FF8A5C','#00C9A7','#FF5C8A'];
+setTimeout(()=>document.getElementById('startBtn').classList.add('show'),2600);
+function openGame(){ document.getElementById('intro').style.display='none'; document.getElementById('game').style.display='block'; document.body.style.overflow='auto'; newPuzzle(); }
 
-function getEntries(){return entries;}
+let arrows = ['↑','→','↓','←'];
+let board = [];
+let target = [[3,2,3],[2,8,0],[1,0,1]]; // 0=right,1=down,2=left,3=up, 8=center
 
-function drawWheel(){
-  const list=getEntries(); if(list.length===0){ctx.clearRect(0,0,380,380);return;}
-  const arc=(2*Math.PI)/list.length;
-  ctx.clearRect(0,0,380,380);
-  list.forEach((entry,i)=>{
-    ctx.beginPath(); ctx.fillStyle=colors[i%colors.length];
-    ctx.moveTo(190,190); ctx.arc(190,190,170, angle+i*arc, angle+(i+1)*arc);
-    ctx.closePath(); ctx.fill();
-    ctx.save(); ctx.translate(190,190); ctx.rotate(angle+i*arc+arc/2);
-    ctx.textAlign="right"; ctx.fillStyle="#fff"; ctx.font="bold 13px sans-serif";
-    ctx.fillText(entry.substring(0,15),150,4); ctx.restore();
-  });
-  // FIXED POINTER - andar ki taraf
-  ctx.fillStyle="#111"; ctx.beginPath();
-  ctx.moveTo(355,190); ctx.lineTo(385,178); ctx.lineTo(385,202);
-  ctx.closePath(); ctx.fill();
-}
-
-function renderList(){
-  const listDiv=document.getElementById('list'); listDiv.innerHTML='';
-  entries.forEach((name,i)=>{
-    const div=document.createElement('div'); div.className='item';
-    div.innerHTML=`${i+1}. ${name} <span onclick="removeEntry(${i})">✕</span>`;
-    listDiv.appendChild(div);
-  });
-  localStorage.setItem('fahad_wheel', JSON.stringify(entries));
-  drawWheel();
-}
-
-function addEntry(){
-  const input=document.getElementById('nameInput');
-  const val=input.value.trim(); if(!val) return;
-  entries.push(val); input.value=''; renderList();
-}
-function removeEntry(i){entries.splice(i,1); renderList();}
-function clearAll(){if(confirm('Clear all names?')){entries=[]; renderList(); winnerEl.textContent='';}}
-
-function spin(){
-  if(spinning) return; if(entries.length<2){alert('Add at least 2 names!');return;}
-  spinning=true; winnerEl.textContent=''; let velocity=Math.random()*12+16;
-  function animate(){
-    velocity*=0.98; angle+=velocity*0.03; drawWheel();
-    if(velocity>0.1){requestAnimationFrame(animate);}else{
-      spinning=false; const arc=(2*Math.PI)/entries.length;
-      const normalized=(2*Math.PI-(angle%(2*Math.PI)))%(2*Math.PI);
-      const winnerIndex=Math.floor(normalized/arc);
-      winnerEl.textContent='🎉 '+entries[winnerIndex]+' 🎉';
-      if(navigator.vibrate) navigator.vibrate(200);
-    }
-  }animate();
-}
-
-function shareWheel(){
-  const text="My Spin Wheel by Fahad Bagwan 🎡 - "+entries.join(', ')+" - Try it: "+window.location.href;
-  if(navigator.share){
-    navigator.share({title:'Spin Wheel by Fahad Bagwan',text:text,url:window.location.href});
-  } else {
-    window.open("https://wa.me/?text="+encodeURIComponent(text), "_blank");
+function newPuzzle(){
+  board=[];
+  let grid=document.getElementById('grid');
+  grid.innerHTML='';
+  document.getElementById('msg').innerText='';
+  for(let i=0;i<9;i++){
+    board[i]=Math.floor(Math.random()*4);
+    let d=document.createElement('div');
+    d.className='cell';
+    d.id='c'+i;
+    d.innerText=arrows[board[i]];
+    d.onclick=()=>rotate(i);
+    grid.appendChild(d);
   }
 }
 
-document.getElementById('nameInput').addEventListener('keypress',function(e){if(e.key==='Enter')addEntry();});
-document.getElementById('spinBtn').addEventListener('click',spin);
-renderList();
-</script>
-</body>
-</html>
+function rotate(i){
+  if(i==4) return; // center fixed
+  board[i]=(board[i]+1)%4;
+  document.getElementById('c'+i).innerText=arrows[board[i]];
+  checkWin();
+}
+
+function checkWin(){
+  // Center is 4, all should point to center
+  // 0:top-left should point → or ↓ or ↘ (we simplify
