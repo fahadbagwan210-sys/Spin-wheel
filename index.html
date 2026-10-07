@@ -1,27 +1,1558 @@
-
+```html
 <!DOCTYPE html>
-<html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Spin & Wheel</title>
+
 <style>
-body{margin:0;background:#ffecd2;font-family:sans-serif;overflow:hidden}
-#game{width:100vw;height:100vh;max-width:420px;margin:auto;background:linear-gradient(#87e0ff 0 40%,#8a6a4a 40% 100%);position:relative;overflow:hidden}
-#road{position:absolute;bottom:0;width:100%;height:60%;background:#444;border-top:8px solid #fff}
-#player{position:absolute;left:50px;bottom:120px;font-size:50px;transition:bottom 0.15s}
-#score{position:absolute;top:15px;left:15px;background:white;padding:8px 16px;border-radius:20px}
-.obstacle{position:absolute;bottom:110px;font-size:45px}
-#msg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:20px;border-radius:20px;display:none;text-align:center;border:4px solid black}
-</style></head>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#10131a;
+    color:white;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    font-size:32px;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#9ca3af;
+    margin-bottom:25px;
+}
+
+.main{
+    display:grid;
+    grid-template-columns:1fr 330px;
+    gap:25px;
+}
+
+.card{
+    background:#181c25;
+    border:1px solid #292f3a;
+    border-radius:20px;
+    padding:20px;
+}
+
+/* WHEEL */
+
+.wheel-area{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+}
+
+canvas{
+    width:100%;
+    max-width:520px;
+    height:auto;
+    display:block;
+}
+
+.pointer{
+    position:absolute;
+    top:3px;
+    left:50%;
+    transform:translateX(-50%);
+    width:0;
+    height:0;
+    border-left:18px solid transparent;
+    border-right:18px solid transparent;
+    border-top:35px solid #ffffff;
+    z-index:5;
+    filter:drop-shadow(0 3px 4px #000);
+}
+
+/* CONTROLS */
+
+.input-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:15px;
+}
+
+input{
+    flex:1;
+    padding:13px;
+    border-radius:10px;
+    border:1px solid #363d4a;
+    background:#0f1218;
+    color:white;
+    outline:none;
+    font-size:15px;
+}
+
+button{
+    border:none;
+    border-radius:10px;
+    padding:12px 15px;
+    font-weight:bold;
+    cursor:pointer;
+    color:white;
+    transition:.2s;
+}
+
+button:active{
+    transform:scale(.96);
+}
+
+.add{
+    background:#2563eb;
+}
+
+.spin{
+    width:100%;
+    background:#16a34a;
+    font-size:18px;
+    padding:16px;
+    margin-top:15px;
+}
+
+.clear{
+    background:#dc2626;
+    width:100%;
+    margin-top:10px;
+}
+
+.shuffle{
+    background:#7c3aed;
+    width:100%;
+    margin-top:10px;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+h2{
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+.names{
+    max-height:250px;
+    overflow-y:auto;
+}
+
+.name-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#10141c;
+    border:1px solid #292f3a;
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:8px;
+}
+
+.remove{
+    background:#ef4444;
+    padding:6px 10px;
+    font-size:12px;
+}
+
+.count{
+    color:#9ca3af;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+/* WINNER */
+
+.winner-box{
+    margin-top:20px;
+    background:#10141c;
+    border:1px solid #292f3a;
+    border-radius:15px;
+    padding:15px;
+    text-align:center;
+}
+
+.winner-title{
+    color:#9ca3af;
+    font-size:13px;
+}
+
+.winner{
+    font-size:25px;
+    font-weight:bold;
+    margin-top:5px;
+    color:#facc15;
+    min-height:30px;
+}
+
+.history{
+    margin-top:20px;
+}
+
+.history-item{
+    padding:8px;
+    border-bottom:1px solid #292f3a;
+    color:#d1d5db;
+}
+
+/* MOBILE */
+
+@media(max-width:750px){
+    body{
+        padding:12px;
+    }
+
+    .main{
+        grid-template-columns:1fr;
+    }
+
+    h1{
+        font-size:27px;
+    }
+
+    .card{
+        padding:14px;
+    }
+
+    canvas{
+        max-width:420px;
+    }
+}
+</style>
+</head>
+
 <body>
-<div id="game" onclick="jump()">
-<div id="score">Rs <span id="s">0</span> Bachaye</div>
-<div id="road"></div>
-<div id="player">🏍️</div>
-<div id="msg"><h2>Gaddhe me gir gaya! 🤕</h2><button onclick="location.reload()">Phir Se</button></div>
+
+<div class="container">
+
+    <h1>🎡 Spin & Wheel</h1>
+    <p class="subtitle">Add names and spin to select a random winner</p>
+
+    <div class="main">
+
+        <!-- WHEEL -->
+        <div class="card">
+
+            <div class="wheel-area">
+                <div class="pointer"></div>
+                <canvas id="wheel" width="600" height="600"></canvas>
+            </div>
+
+            <button class="spin" id="spinBtn">🎯 SPIN</button>
+
+            <div class="winner-box">
+                <div class="winner-title">WINNER</div>
+                <div class="winner" id="winner">---</div>
+            </div>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+        <div class="card">
+
+            <h2>👥 Participants</h2>
+
+            <div class="input-row">
+                <input
+                    type="text"
+                    id="nameInput"
+                    placeholder="Enter name..."
+                >
+
+                <button class="add" id="addBtn">ADD</button>
+            </div>
+
+            <div class="count">
+                Participants: <span id="count">0</span>
+            </div>
+
+            <div class="names" id="names"></div>
+
+            <button class="shuffle" id="shuffleBtn">
+                🔀 SHUFFLE
+            </button>
+
+            <button class="clear" id="clearBtn">
+                🗑 CLEAR ALL
+            </button>
+
+            <div class="history">
+                <h2>🏆 Winner History</h2>
+                <div id="history"></div>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
+
+
 <script>
-let p=document.getElementById('player'),s=0,j=false,over=false,obs=[],speed=4;
-function jump(){if(j||over)return;j=true;p.style.bottom='220px';setTimeout(()=>{p.style.bottom='120px';setTimeout(()=>j=false,150)},300)}
-function make(){if(over)return;let d=document.createElement('div');d.className='obstacle';d.innerText=['🕳️','🐄','🛺','🚧'][Math.floor(Math.random()*4)];d.style.left='400px';document.getElementById('game').appendChild(d);obs.push(d);setTimeout(make,800)}
-function loop(){if(over)return;obs.forEach((o,i)=>{let l=parseInt(o.style.left)||400;o.style.left=(l-speed)+'px';if(l<100&&l>20&&!j&&parseInt(p.style.bottom)<160){over=true;document.getElementById('msg').style.display='block';p.innerText='🤕'}if(l<-50){o.remove();obs.splice(i,1);s+=100;document.getElementById('s').innerText=s}});requestAnimationFrame(loop)}
-make();loop();
-document.addEventListener('touchstart',e=>{e.preventDefault();jump()})
-</script></body></html>
+
+/* =========================
+   DEFAULT NAMES
+========================= */
+
+let names = [
+    "Modi",
+    "John Cena",
+    "Ronaldo",
+    "Virat Kohli"
+];
+
+let rotation = 0;
+let spinning = false;
+
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+
+const nameInput = document.getElementById("nameInput");
+const addBtn = document.getElementById("addBtn");
+const spinBtn = document.getElementById("spinBtn");
+const clearBtn = document.getElementById("clearBtn");
+const shuffleBtn = document.getElementById("shuffleBtn");
+
+const namesBox = document.getElementById("names");
+const countBox = document.getElementById("count");
+const winnerBox = document.getElementById("winner");
+const historyBox = document.getElementById("history");
+
+
+/* =========================
+   DRAW WHEEL
+========================= */
+
+function drawWheel(){
+
+    const w = canvas.width;
+    const h = canvas.height;
+
+    ctx.clearRect(0,0,w,h);
+
+    const centerX = w / 2;
+    const centerY = h / 2;
+    const radius = 270;
+
+    if(names.length === 0){
+
+        ctx.beginPath();
+        ctx.arc(centerX,centerY,radius,0,Math.PI*2);
+        ctx.fillStyle = "#252b36";
+        ctx.fill();
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 25px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Add Names",centerX,centerY);
+
+        return;
+    }
+
+    const slice = (Math.PI * 2) / names.length;
+
+    const colors = [
+        "#2563eb",
+        "#dc2626",
+        "#16a34a",
+        "#9333ea",
+        "#ea580c",
+        "#0891b2",
+        "#db2777",
+        "#65a30d",
+        "#ca8a04",
+        "#4f46e5"
+    ];
+
+    for(let i=0;i<names.length;i++){
+
+        const start = rotation + i * slice;
+        const end = start + slice;
+
+        /* Segment */
+
+        ctx.beginPath();
+        ctx.moveTo(centerX,centerY);
+        ctx.arc(
+            centerX,
+            centerY,
+            radius,
+            start,
+            end
+        );
+        ctx.closePath();
+
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fill();
+
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+
+        /* NAME */
+
+        const middle = start + slice / 2;
+
+        ctx.save();
+
+        ctx.translate(
+            centerX + Math.cos(middle) * radius * 0.63,
+            centerY + Math.sin(middle) * radius * 0.63
+        );
+
+        ctx.rotate(middle);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 22px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        let text = names[i];
+
+        /* Keep long names readable */
+
+        if(text.length > 14){
+            text = text.substring(0,13) + "...";
+        }
+
+        ctx.fillText(text,0,0);
+
+        ctx.restore();
+    }
+
+
+    /* Outer circle */
+
+    ctx.beginPath();
+    ctx.arc(
+        centerX,
+        centerY,
+        radius,
+        0,
+        Math.PI*2
+    );
+
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 6;
+    ctx.stroke();
+
+
+    /* CENTER */
+
+    ctx.beginPath();
+    ctx.arc(
+        centerX,
+        centerY,
+        58,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle = "#111827";
+    ctx.fill();
+
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 18px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("SPIN",centerX,centerY);
+}
+
+
+/* =========================
+   UPDATE NAME LIST
+========================= */
+
+function updateNames(){
+
+    namesBox.innerHTML = "";
+
+    names.forEach(function(name,index){
+
+        const div = document.createElement("div");
+
+        div.className = "name-item";
+
+        div.innerHTML =
+            "<span>" + escapeHTML(name) + "</span>" +
+            "<button class='remove' onclick='removeName(" +
+            index +
+            ")'>REMOVE</button>";
+
+        namesBox.appendChild(div);
+    });
+
+    countBox.textContent = names.length;
+
+    drawWheel();
+}
+
+
+/* =========================
+   SAFE TEXT
+========================= */
+
+function escapeHTML(text){
+
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =========================
+   ADD NAME
+========================= */
+
+function addName(){
+
+    const value = nameInput.value.trim();
+
+    if(value === ""){
+        alert("Please enter a name.");
+        return;
+    }
+
+    names.push(value);
+
+    nameInput.value = "";
+
+    winnerBox.textContent = "---";
+
+    updateNames();
+
+    nameInput.focus();
+}
+
+
+/* =========================
+   REMOVE NAME
+========================= */
+
+function removeName(index){
+
+    if(spinning) return;
+
+    names.splice(index,1);
+
+    updateNames();
+}
+
+
+/* =========================
+   CLEAR ALL
+========================= */
+
+function clearAll(){
+
+    if(spinning) return;
+
+    names = [];
+
+    winnerBox.textContent = "---";
+
+    updateNames();
+}
+
+
+/* =========================
+   SHUFFLE
+========================= */
+
+function shuffleNames(){
+
+    if(spinning || names.length < 2) return;
+
+    for(let i=names.length-1;i>0;i--){
+
+        const j = Math.floor(Math.random()*(i+1));
+
+        const temp = names[i];
+
+        names[i] = names[j];
+
+        names[j] = temp;
+    }
+
+    updateNames();
+}
+
+
+/* =========================
+   SPIN
+========================= */
+
+function spin(){
+
+    if(spinning) return;
+
+    if(names.length < 2){
+
+        alert("Add at least 2 names to spin.");
+
+        return;
+    }
+
+    spinning = true;
+
+    spinBtn.disabled = true;
+
+    spinBtn.textContent = "SPINNING...";
+
+    winnerBox.textContent = "....";
+
+
+    /* Random winner */
+
+    const winnerIndex =
+        Math.floor(Math.random() * names.length);
+
+
+    const slice =
+        (Math.PI * 2) / names.length;
+
+
+    /*
+       Target angle places the
+       selected segment at the top.
+    */
+
+    const targetAngle =
+        -Math.PI / 2
+        - (winnerIndex + 0.5) * slice;
+
+
+    const extraSpins =
+        6 * Math.PI * 2;
+
+
+    const startRotation = rotation;
+
+    const finalRotation =
+        targetAngle + extraSpins;
+
+
+    const duration = 4500;
+
+    const startTime = performance.now();
+
+
+    function animate(currentTime){
+
+        const elapsed =
+            currentTime - startTime;
+
+        let progress =
+            elapsed / duration;
+
+        if(progress > 1){
+            progress = 1;
+        }
+
+
+        /* Smooth easing */
+
+        const ease =
+            1 - Math.pow(1-progress,4);
+
+
+        rotation =
+            startRotation +
+            (finalRotation - startRotation) * ease;
+
+
+        drawWheel();
+
+
+        if(progress < 1){
+
+            requestAnimationFrame(animate);
+
+        }else{
+
+            spinning = false;
+
+            spinBtn.disabled = false;
+
+            spinBtn.textContent = "🎯 SPIN";
+
+            rotation =
+                rotation % (Math.PI * 2);
+
+            const winner =
+                names[winnerIndex];
+
+            winnerBox.textContent = winner;
+
+            addHistory(winner);
+        }
+    }
+
+
+    requestAnimationFrame(animate);
+}
+
+
+/* =========================
+   HISTORY
+========================= */
+
+function addHistory(name){
+
+    const div = document.createElement("div");
+
+    div.className = "history-item";
+
+    div.textContent = "🏆 " + name;
+
+    historyBox.prepend(div);
+
+    while(historyBox.children.length > 10){
+
+        historyBox.removeChild(
+            historyBox.lastChild
+        );
+    }
+}
+
+
+/* =========================
+   BUTTON EVENTS
+========================= */
+
+addBtn.addEventListener("click",addName);
+
+spinBtn.addEventListener("click",spin);
+
+clearBtn.addEventListener("click",clearAll);
+
+shuffleBtn.addEventListener("click",shuffleNames);
+
+
+/* ENTER KEY */
+
+nameInput.addEventListener("keydown",function(event){
+
+    if(event.key === "Enter"){
+
+        addName();
+    }
+});
+
+
+/* =========================
+   START
+========================= */
+
+updateNames();
+
+</script>
+
+</body>
+</html>
+```
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Spin & Wheel</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#10131a;
+    color:white;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    font-size:32px;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    text-align:center;
+    color:#9ca3af;
+    margin-bottom:25px;
+}
+
+.main{
+    display:grid;
+    grid-template-columns:1fr 330px;
+    gap:25px;
+}
+
+.card{
+    background:#181c25;
+    border:1px solid #292f3a;
+    border-radius:20px;
+    padding:20px;
+}
+
+/* WHEEL */
+
+.wheel-area{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+}
+
+canvas{
+    width:100%;
+    max-width:520px;
+    height:auto;
+    display:block;
+}
+
+.pointer{
+    position:absolute;
+    top:3px;
+    left:50%;
+    transform:translateX(-50%);
+    width:0;
+    height:0;
+    border-left:18px solid transparent;
+    border-right:18px solid transparent;
+    border-top:35px solid #ffffff;
+    z-index:5;
+    filter:drop-shadow(0 3px 4px #000);
+}
+
+/* CONTROLS */
+
+.input-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:15px;
+}
+
+input{
+    flex:1;
+    padding:13px;
+    border-radius:10px;
+    border:1px solid #363d4a;
+    background:#0f1218;
+    color:white;
+    outline:none;
+    font-size:15px;
+}
+
+button{
+    border:none;
+    border-radius:10px;
+    padding:12px 15px;
+    font-weight:bold;
+    cursor:pointer;
+    color:white;
+    transition:.2s;
+}
+
+button:active{
+    transform:scale(.96);
+}
+
+.add{
+    background:#2563eb;
+}
+
+.spin{
+    width:100%;
+    background:#16a34a;
+    font-size:18px;
+    padding:16px;
+    margin-top:15px;
+}
+
+.clear{
+    background:#dc2626;
+    width:100%;
+    margin-top:10px;
+}
+
+.shuffle{
+    background:#7c3aed;
+    width:100%;
+    margin-top:10px;
+}
+
+button:hover{
+    opacity:.85;
+}
+
+h2{
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+.names{
+    max-height:250px;
+    overflow-y:auto;
+}
+
+.name-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#10141c;
+    border:1px solid #292f3a;
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:8px;
+}
+
+.remove{
+    background:#ef4444;
+    padding:6px 10px;
+    font-size:12px;
+}
+
+.count{
+    color:#9ca3af;
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+/* WINNER */
+
+.winner-box{
+    margin-top:20px;
+    background:#10141c;
+    border:1px solid #292f3a;
+    border-radius:15px;
+    padding:15px;
+    text-align:center;
+}
+
+.winner-title{
+    color:#9ca3af;
+    font-size:13px;
+}
+
+.winner{
+    font-size:25px;
+    font-weight:bold;
+    margin-top:5px;
+    color:#facc15;
+    min-height:30px;
+}
+
+.history{
+    margin-top:20px;
+}
+
+.history-item{
+    padding:8px;
+    border-bottom:1px solid #292f3a;
+    color:#d1d5db;
+}
+
+/* MOBILE */
+
+@media(max-width:750px){
+    body{
+        padding:12px;
+    }
+
+    .main{
+        grid-template-columns:1fr;
+    }
+
+    h1{
+        font-size:27px;
+    }
+
+    .card{
+        padding:14px;
+    }
+
+    canvas{
+        max-width:420px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🎡 Spin & Wheel</h1>
+    <p class="subtitle">Add names and spin to select a random winner</p>
+
+    <div class="main">
+
+        <!-- WHEEL -->
+        <div class="card">
+
+            <div class="wheel-area">
+                <div class="pointer"></div>
+                <canvas id="wheel" width="600" height="600"></canvas>
+            </div>
+
+            <button class="spin" id="spinBtn">🎯 SPIN</button>
+
+            <div class="winner-box">
+                <div class="winner-title">WINNER</div>
+                <div class="winner" id="winner">---</div>
+            </div>
+
+        </div>
+
+
+        <!-- CONTROLS -->
+        <div class="card">
+
+            <h2>👥 Participants</h2>
+
+            <div class="input-row">
+                <input
+                    type="text"
+                    id="nameInput"
+                    placeholder="Enter name..."
+                >
+
+                <button class="add" id="addBtn">ADD</button>
+            </div>
+
+            <div class="count">
+                Participants: <span id="count">0</span>
+            </div>
+
+            <div class="names" id="names"></div>
+
+            <button class="shuffle" id="shuffleBtn">
+                🔀 SHUFFLE
+            </button>
+
+            <button class="clear" id="clearBtn">
+                🗑 CLEAR ALL
+            </button>
+
+            <div class="history">
+                <h2>🏆 Winner History</h2>
+                <div id="history"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   DEFAULT NAMES
+========================= */
+
+let names = [
+    "Modi",
+    "John Cena",
+    "Ronaldo",
+    "Virat Kohli"
+];
+
+let rotation = 0;
+let spinning = false;
+
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+
+const nameInput = document.getElementById("nameInput");
+const addBtn = document.getElementById("addBtn");
+const spinBtn = document.getElementById("spinBtn");
+const clearBtn = document.getElementById("clearBtn");
+const shuffleBtn = document.getElementById("shuffleBtn");
+
+const namesBox = document.getElementById("names");
+const countBox = document.getElementById("count");
+const winnerBox = document.getElementById("winner");
+const historyBox = document.getElementById("history");
+
+
+/* =========================
+   DRAW WHEEL
+========================= */
+
+function drawWheel(){
+
+    const w = canvas.width;
+    const h = canvas.height;
+
+    ctx.clearRect(0,0,w,h);
+
+    const centerX = w / 2;
+    const centerY = h / 2;
+    const radius = 270;
+
+    if(names.length === 0){
+
+        ctx.beginPath();
+        ctx.arc(centerX,centerY,radius,0,Math.PI*2);
+        ctx.fillStyle = "#252b36";
+        ctx.fill();
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 25px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Add Names",centerX,centerY);
+
+        return;
+    }
+
+    const slice = (Math.PI * 2) / names.length;
+
+    const colors = [
+        "#2563eb",
+        "#dc2626",
+        "#16a34a",
+        "#9333ea",
+        "#ea580c",
+        "#0891b2",
+        "#db2777",
+        "#65a30d",
+        "#ca8a04",
+        "#4f46e5"
+    ];
+
+    for(let i=0;i<names.length;i++){
+
+        const start = rotation + i * slice;
+        const end = start + slice;
+
+        /* Segment */
+
+        ctx.beginPath();
+        ctx.moveTo(centerX,centerY);
+        ctx.arc(
+            centerX,
+            centerY,
+            radius,
+            start,
+            end
+        );
+        ctx.closePath();
+
+        ctx.fillStyle = colors[i % colors.length];
+        ctx.fill();
+
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+
+        /* NAME */
+
+        const middle = start + slice / 2;
+
+        ctx.save();
+
+        ctx.translate(
+            centerX + Math.cos(middle) * radius * 0.63,
+            centerY + Math.sin(middle) * radius * 0.63
+        );
+
+        ctx.rotate(middle);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 22px Arial";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        let text = names[i];
+
+        /* Keep long names readable */
+
+        if(text.length > 14){
+            text = text.substring(0,13) + "...";
+        }
+
+        ctx.fillText(text,0,0);
+
+        ctx.restore();
+    }
+
+
+    /* Outer circle */
+
+    ctx.beginPath();
+    ctx.arc(
+        centerX,
+        centerY,
+        radius,
+        0,
+        Math.PI*2
+    );
+
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 6;
+    ctx.stroke();
+
+
+    /* CENTER */
+
+    ctx.beginPath();
+    ctx.arc(
+        centerX,
+        centerY,
+        58,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle = "#111827";
+    ctx.fill();
+
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 18px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("SPIN",centerX,centerY);
+}
+
+
+/* =========================
+   UPDATE NAME LIST
+========================= */
+
+function updateNames(){
+
+    namesBox.innerHTML = "";
+
+    names.forEach(function(name,index){
+
+        const div = document.createElement("div");
+
+        div.className = "name-item";
+
+        div.innerHTML =
+            "<span>" + escapeHTML(name) + "</span>" +
+            "<button class='remove' onclick='removeName(" +
+            index +
+            ")'>REMOVE</button>";
+
+        namesBox.appendChild(div);
+    });
+
+    countBox.textContent = names.length;
+
+    drawWheel();
+}
+
+
+/* =========================
+   SAFE TEXT
+========================= */
+
+function escapeHTML(text){
+
+    return text
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =========================
+   ADD NAME
+========================= */
+
+function addName(){
+
+    const value = nameInput.value.trim();
+
+    if(value === ""){
+        alert("Please enter a name.");
+        return;
+    }
+
+    names.push(value);
+
+    nameInput.value = "";
+
+    winnerBox.textContent = "---";
+
+    updateNames();
+
+    nameInput.focus();
+}
+
+
+/* =========================
+   REMOVE NAME
+========================= */
+
+function removeName(index){
+
+    if(spinning) return;
+
+    names.splice(index,1);
+
+    updateNames();
+}
+
+
+/* =========================
+   CLEAR ALL
+========================= */
+
+function clearAll(){
+
+    if(spinning) return;
+
+    names = [];
+
+    winnerBox.textContent = "---";
+
+    updateNames();
+}
+
+
+/* =========================
+   SHUFFLE
+========================= */
+
+function shuffleNames(){
+
+    if(spinning || names.length < 2) return;
+
+    for(let i=names.length-1;i>0;i--){
+
+        const j = Math.floor(Math.random()*(i+1));
+
+        const temp = names[i];
+
+        names[i] = names[j];
+
+        names[j] = temp;
+    }
+
+    updateNames();
+}
+
+
+/* =========================
+   SPIN
+========================= */
+
+function spin(){
+
+    if(spinning) return;
+
+    if(names.length < 2){
+
+        alert("Add at least 2 names to spin.");
+
+        return;
+    }
+
+    spinning = true;
+
+    spinBtn.disabled = true;
+
+    spinBtn.textContent = "SPINNING...";
+
+    winnerBox.textContent = "....";
+
+
+    /* Random winner */
+
+    const winnerIndex =
+        Math.floor(Math.random() * names.length);
+
+
+    const slice =
+        (Math.PI * 2) / names.length;
+
+
+    /*
+       Target angle places the
+       selected segment at the top.
+    */
+
+    const targetAngle =
+        -Math.PI / 2
+        - (winnerIndex + 0.5) * slice;
+
+
+    const extraSpins =
+        6 * Math.PI * 2;
+
+
+    const startRotation = rotation;
+
+    const finalRotation =
+        targetAngle + extraSpins;
+
+
+    const duration = 4500;
+
+    const startTime = performance.now();
+
+
+    function animate(currentTime){
+
+        const elapsed =
+            currentTime - startTime;
+
+        let progress =
+            elapsed / duration;
+
+        if(progress > 1){
+            progress = 1;
+        }
+
+
+        /* Smooth easing */
+
+        const ease =
+            1 - Math.pow(1-progress,4);
+
+
+        rotation =
+            startRotation +
+            (finalRotation - startRotation) * ease;
+
+
+        drawWheel();
+
+
+        if(progress < 1){
+
+            requestAnimationFrame(animate);
+
+        }else{
+
+            spinning = false;
+
+            spinBtn.disabled = false;
+
+            spinBtn.textContent = "🎯 SPIN";
+
+            rotation =
+                rotation % (Math.PI * 2);
+
+            const winner =
+                names[winnerIndex];
+
+            winnerBox.textContent = winner;
+
+            addHistory(winner);
+        }
+    }
+
+
+    requestAnimationFrame(animate);
+}
+
+
+/* =========================
+   HISTORY
+========================= */
+
+function addHistory(name){
+
+    const div = document.createElement("div");
+
+    div.className = "history-item";
+
+    div.textContent = "🏆 " + name;
+
+    historyBox.prepend(div);
+
+    while(historyBox.children.length > 10){
+
+        historyBox.removeChild(
+            historyBox.lastChild
+        );
+    }
+}
+
+
+/* =========================
+   BUTTON EVENTS
+========================= */
+
+addBtn.addEventListener("click",addName);
+
+spinBtn.addEventListener("click",spin);
+
+clearBtn.addEventListener("click",clearAll);
+
+shuffleBtn.addEventListener("click",shuffleNames);
+
+
+/* ENTER KEY */
+
+nameInput.addEventListener("keydown",function(event){
+
+    if(event.key === "Enter"){
+
+        addName();
+    }
+});
+
+
+/* =========================
+   START
+========================= */
+
+updateNames();
+
+</script>
+
+</body>
+</html>
+```
