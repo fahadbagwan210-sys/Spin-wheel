@@ -1,0 +1,16 @@
+{
+  "name": "Spin Wheel Offer",
+  "short_name": "SpinWheel",
+  "description": "Spin and win exciting offers",
+  "start_url": "/Spin-wheel/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff6600",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/138/138533.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
