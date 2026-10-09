@@ -1,0 +1,21 @@
+{
+  "name": "Spin Wheel Offer",
+  "short_name": "SpinWheel",
+  "description": "Spin and win exciting offers",
+  "start_url": "/Spin-wheel/",
+  "display": "standalone",
+  "background_color": "#0d1b3a",
+  "theme_color": "#ff6600",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
